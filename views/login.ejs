@@ -1,0 +1,30 @@
+<% title = "Login"; userName = null; %>
+<%- include("_header") %>
+
+<section class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">Welcome Back</h1>
+    <p  class="auth-sub">Sign in to access your notes.</p>
+
+    <% if (success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <form action="/auth/login" method="POST" class="auth-form">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Your password" required autocomplete="current-password" />
+
+      <button type="submit" class="btn btn-primary btn-full">Log In</button>
+    </form>
+
+    <p class="auth-footer-link">Don't have an account? <a href="/auth/register">Sign up</a></p>
+  </div>
+</section>
+
+<%- include("_footer") %>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> &mdash; NotesVault</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="nav-brand">📓 NotesVault</a>
+    <div class="nav-actions">
+      <% if (typeof userName !== "undefined" && userName) { %>
+        <span class="nav-user">Hello, <strong><%= userName %></strong></span>
+        <a href="/auth/logout" class="btn btn-outline btn-sm">Logout</a>
+      <% } else { %>
+        <a href="/auth/login"    class="btn btn-outline btn-sm">Login</a>
+        <a href="/auth/register" class="btn btn-primary  btn-sm">Register</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <main class="container">

@@ -1,0 +1,13 @@
+<% userName = null; %>
+<%- include("_header") %>
+
+<section class="auth-page">
+  <div class="auth-card error-card">
+    <h1 class="error-code"><%= code %></h1>
+    <h2 class="auth-title"><%= title %></h2>
+    <p  class="auth-sub"><%= message %></p>
+    <a href="/" class="btn btn-primary" style="margin-top:1rem;">Go Home</a>
+  </div>
+</section>
+
+<%- include("_footer") %>
