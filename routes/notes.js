@@ -1,15 +1,5 @@
-/* ===================================================
-   routes/notes.js — CRUD operations on Notes
-   ===================================================
-   All routes here are guarded by requireAuth.
-   req.user is guaranteed to exist (set by middleware).
-   Every DB query filters by userId: req.user._id
-   so users can only ever see / edit / delete their
-   own notes.
-   =================================================== */
-
-import { Router }     from "express";
-import Note           from "../models/Note.js";
+import { Router } from "express";
+import Note from "../models/Note.js";
 import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
@@ -23,13 +13,14 @@ router.use(requireAuth);
 router.get("/dashboard", async (req, res) => {
   try {
     // Only fetch notes that belong to the logged-in user, newest first
-    const notes = await Note.find({ userId: req.user._id })
-                            .sort({ createdAt: -1 });
+    const notes = await Note.find({ userId: req.user._id }).sort({
+      createdAt: -1,
+    });
 
     res.render("dashboard", {
       userName: req.user.name,
       notes,
-      error: null
+      error: null,
     });
   } catch (err) {
     console.error("Dashboard error →", err);
@@ -41,17 +32,19 @@ router.get("/dashboard", async (req, res) => {
 // POST /notes/create  →  add a new note
 // ─────────────────────────────────────────────────────
 router.post("/create", async (req, res) => {
-  const title   = (req.body.title   || "").trim();
+  const title = (req.body.title || "").trim();
   const content = (req.body.content || "").trim();
 
   // ── Validate ──────────────────────────────────────
   if (!title || !content) {
     // Re-render dashboard with the error so the user sees the form again
-    const notes = await Note.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    const notes = await Note.find({ userId: req.user._id }).sort({
+      createdAt: -1,
+    });
     return res.render("dashboard", {
       userName: req.user.name,
       notes,
-      error: "Both title and content are required."
+      error: "Both title and content are required.",
     });
   }
 
@@ -59,7 +52,7 @@ router.post("/create", async (req, res) => {
     await new Note({
       title,
       content,
-      userId: req.user._id   // ← owner is always the logged-in user
+      userId: req.user._id, // ← owner is always the logged-in user
     }).save();
 
     // PRG: redirect after POST so browser back-button doesn't re-submit
@@ -74,7 +67,7 @@ router.post("/create", async (req, res) => {
 // POST /notes/update/:id  →  edit an existing note
 // ─────────────────────────────────────────────────────
 router.post("/update/:id", async (req, res) => {
-  const title   = (req.body.title   || "").trim();
+  const title = (req.body.title || "").trim();
   const content = (req.body.content || "").trim();
 
   // ── Validate ──────────────────────────────────────
@@ -86,8 +79,8 @@ router.post("/update/:id", async (req, res) => {
     // The dual filter (_id AND userId) is the ownership gate.
     // If the note doesn't belong to this user, nothing is updated.
     await Note.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user._id },   // ← ownership check
-      { title, content }                                // ← fields to update
+      { _id: req.params.id, userId: req.user._id }, // ← ownership check
+      { title, content }, // ← fields to update
     );
 
     return res.redirect("/notes/dashboard");
@@ -104,8 +97,8 @@ router.post("/delete/:id", async (req, res) => {
   try {
     // Same dual filter — can only delete your own notes
     await Note.findOneAndDelete({
-      _id:    req.params.id,
-      userId: req.user._id                             // ← ownership check
+      _id: req.params.id,
+      userId: req.user._id, // ← ownership check
     });
 
     return res.redirect("/notes/dashboard");
